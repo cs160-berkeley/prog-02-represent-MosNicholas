@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="democratFaded">#902F80ED</color>
+    <color name="republicanFaded">#90EB5757</color>
+    <color name="white">#FFF</color>
+</resources>

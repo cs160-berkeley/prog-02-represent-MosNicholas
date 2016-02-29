@@ -16,5 +16,4 @@ See [your demo video title here] (https://link_to_your_video)
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Any other support
+http://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125

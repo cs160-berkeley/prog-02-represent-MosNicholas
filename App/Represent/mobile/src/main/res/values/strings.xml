@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Represent</string>
     <string name="action_settings">Settings</string>
+    <string name="choose_zip">Choose a zip code</string>
+    <string name="choose_current_location">Or use your current location</string>
+    <string name="title_activity_representatives_list">RepresentativesList</string>
+    <string name="title_activity_representative_profile">RepresentativeProfile</string>
+    <string name="zip_code_go">Go!</string>
 </resources>
