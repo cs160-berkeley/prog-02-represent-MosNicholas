@@ -2,6 +2,8 @@ package com.example.nicholasmoschopoulos.represent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
@@ -30,8 +32,9 @@ public class RepresentativeProfile extends Activity {
         TextView name = (TextView) findViewById(R.id.representative_name);
         TextView eot = (TextView) findViewById(R.id.representative_eot);
 
-        int imageID = this.getResources().getIdentifier(repData.get("image") , "drawable", this.getPackageName());
-        image.setImageResource(imageID);
+        int imageID = getResources().getIdentifier(repData.get("image") , "drawable", this.getPackageName());
+        Bitmap bitmapImage = BitmapFactory.decodeResource(getResources(), imageID);
+        image.setImageBitmap(RepresentativeListAdapter.getRoundedCornerBitmap(bitmapImage));
         name.setText(repData.get("name"));
         eot.setText(repData.get("eot"));
 

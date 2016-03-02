@@ -1,12 +1,19 @@
 package com.example.nicholasmoschopoulos.represent;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.io.FileNotFoundException;
 
 /**
  * Created by nicholasmoschopoulos on 2/28/16.
@@ -15,9 +22,17 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
 
     private final static int NUM_ROWS = 2;
     private final Context mContext;
-    private RepresentativeData[] repData = new RepresentativeData[]{};
+    private RepresentativeData[] repData;
 
     public RepresentativesGridAdapter(Context context) { mContext = context; }
+
+    public void loadData(String[] names, Bundle data) {
+        repData = new RepresentativeData[names.length];
+        for (int i=0; i<names.length; i++) {
+            Bundle rep = data.getBundle(names[i]);
+            repData[i] = new RepresentativeData(rep);
+        }
+    }
 
     @Override
     public int getRowCount() { return NUM_ROWS; }
@@ -31,14 +46,18 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup viewGroup, int row, int col) {
         RepresentativeData rd = repData[col];
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view;
 
         if (row == 0) {
-            view = inflater.inflate(R.layout.representative_list_item, viewGroup);
+            view = inflater.inflate(R.layout.representative_list_item, null);
+
             RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.image_holder_rl);
-            relativeLayout.setBackgroundResource(rd.drawableResId);
+            BitmapFactory.decodeByteArray(rd.image, 0, rd.image.length);
+            Bitmap image = BitmapFactory.decodeByteArray(rd.image, 0, rd.image.length);
+            relativeLayout.setBackground(new BitmapDrawable(mContext.getResources(), image));
+
             TextView repName = (TextView) view.findViewById(R.id.rep_name);
             repName.setText(rd.name);
             repName.setBackgroundColor(mContext.getResources().getColor(R.color.democratFaded));
@@ -50,15 +69,15 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
                 }
             });
         } else {
-            view = inflater.inflate(R.layout.presidential_election_data, viewGroup);
+            view = inflater.inflate(R.layout.presidential_election_data, null);
             TextView state = (TextView) view.findViewById(R.id.state_pres_data);
             state.setText(rd.state);
             TextView county = (TextView) view.findViewById(R.id.county_pres_data);
             county.setText(rd.county);
             TextView obama = (TextView) view.findViewById(R.id.obama_votes);
-            obama.setText(String.format("%% of vote for Obama: %d", rd.obamaVotes));
+            obama.setText(String.format("%% of vote for Obama: %s", rd.obamaVotes));
             TextView romney = (TextView) view.findViewById(R.id.romney_votes);
-            romney.setText(String.format("%% of vote for Romney: %d", rd.romneyVotes));
+            romney.setText(String.format("%% of vote for Romney: %s", rd.romneyVotes));
         }
 
         viewGroup.addView(view);

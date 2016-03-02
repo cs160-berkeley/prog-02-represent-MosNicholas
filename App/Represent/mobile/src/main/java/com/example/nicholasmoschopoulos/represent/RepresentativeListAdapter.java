@@ -1,6 +1,14 @@
 package com.example.nicholasmoschopoulos.represent;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,14 +68,15 @@ public class RepresentativeListAdapter extends BaseAdapter {
 
         HashMap<String, String> repData = getItem(position);
 
-        int imageID = mContext.getResources().getIdentifier(repData.get("image") , "drawable", mContext.getPackageName());
-        repImage.setImageResource(imageID);
+        int imageID = mContext.getResources().getIdentifier(repData.get("image"), "drawable", mContext.getPackageName());
+        Bitmap image = BitmapFactory.decodeResource(mContext.getResources(), imageID);
+        repImage.setImageBitmap(getRoundedCornerBitmap(image));
         repName.setText(repData.get("name"));
         repEmail.setText(repData.get("email"));
         repWebsite.setText(repData.get("website"));
         repTweet.setText(repData.get("tweet"));
 
-        int color = mContext.getResources().getIdentifier(repData.get("affiliation"), "color", mContext.getPackageName());
+        int color = mContext.getResources().getIdentifier(repData.get("party"), "color", mContext.getPackageName());
         itemView.setBackgroundResource(color);
 
         return itemView;
@@ -76,5 +85,26 @@ public class RepresentativeListAdapter extends BaseAdapter {
     public void updateEntries(List<HashMap<String, String>> entries) {
         this.entries = entries;
         notifyDataSetChanged();
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final int roundPx = 500; // change per image – set each image to a square (crop sides), then create circle based on dimensions. (240x240 gives 500 as perfect)
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }

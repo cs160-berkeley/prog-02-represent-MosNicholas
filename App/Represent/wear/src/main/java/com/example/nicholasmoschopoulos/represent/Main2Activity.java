@@ -1,6 +1,7 @@
 package com.example.nicholasmoschopoulos.represent;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.GridViewPager;
+import android.widget.TextView;
 
 public class Main2Activity extends WearableActivity implements SensorEventListener {
 
@@ -27,9 +29,14 @@ public class Main2Activity extends WearableActivity implements SensorEventListen
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
-        GridViewPager pager = (GridViewPager) findViewById(R.id.representative_watch_list);
+        Intent intent = getIntent();
         RepresentativesGridAdapter adapter = new RepresentativesGridAdapter(this);
-        // Need an adapter.loadData method, passing in Intent data
+        adapter.loadData(
+                intent.getStringArrayExtra(WatchListenerService.REP_NAMES),
+                intent.getBundleExtra(WatchListenerService.REP_DATA)
+        );
+
+        GridViewPager pager = (GridViewPager) findViewById(R.id.representative_watch_list);
         pager.setAdapter(adapter);
     }
 
@@ -61,9 +68,7 @@ public class Main2Activity extends WearableActivity implements SensorEventListen
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     @Override
     protected void onPause() {
