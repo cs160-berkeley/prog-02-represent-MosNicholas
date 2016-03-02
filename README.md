@@ -15,3 +15,5 @@ See [Represent! walkthrough](https://youtu.be/7RyAVvnUTIs)
 ## Acknowledgments
 
 http://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
+http://developer.android.com/training/wearables/data-layer/events.html#Listen
+
