@@ -1,10 +1,10 @@
 package com.example.nicholasmoschopoulos.represent;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
  * Created by nicholasmoschopoulos on 2/28/16.
  */
 public class RepresentativesGridAdapter extends GridPagerAdapter {
+
+    public final static String REP_ID = "com.represent.wear.REP_ID";
 
     private final static int NUM_ROWS = 2;
     private final Context mContext;
@@ -44,8 +46,8 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
     public int getCurrentColumnForRow(int row, int col) { return col; }
 
     @Override
-    public Object instantiateItem(ViewGroup viewGroup, int row, int col) {
-        RepresentativeData rd = repData[col];
+    public Object instantiateItem(ViewGroup viewGroup, int row, final int col) {
+        final RepresentativeData rd = repData[col];
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view;
@@ -60,12 +62,19 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
 
             TextView repName = (TextView) view.findViewById(R.id.rep_name);
             repName.setText(rd.name);
-            repName.setBackgroundColor(mContext.getResources().getColor(R.color.democratFaded));
+            if (rd.party.equals("democrat")) {
+                repName.setBackgroundColor(mContext.getResources().getColor(R.color.democratFaded));
+            } else {
+                repName.setBackgroundColor(mContext.getResources().getColor(R.color.republicanFaded));
+            }
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Launch profile on phone
+                    Intent intent = new Intent(view.getContext(), WatchToPhoneService.class);
+                    intent.putExtra(RepresentativesGridAdapter.REP_ID, rd.name);
+                    intent.putExtra(WatchToPhoneService.MESSAGE_KEY, WatchToPhoneService.REPRESENTATIVE_CHOSEN);
+                    view.getContext().startService(intent);
                 }
             });
         } else {

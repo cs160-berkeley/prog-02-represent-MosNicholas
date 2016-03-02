@@ -48,7 +48,7 @@ public class RepresentativesList extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                representativeClicked(view, position);
+                representativeClicked(view, representativeData.getNthRepresentative(position).get("name"));
             }
         });
     }
@@ -61,9 +61,9 @@ public class RepresentativesList extends AppCompatActivity {
         startService(sendIntent);
     }
 
-    private void representativeClicked(View view, int position) {
+    private void representativeClicked(View view, String name) {
         Intent intent = new Intent(this, RepresentativeProfile.class);
-        intent.putExtra(REPRESENTATIVE_ID, position); // To be changed with API calls. Use a unique rep ID?
+        intent.putExtra(REPRESENTATIVE_ID, name); // To be changed with API calls. Use a unique rep ID?
         startActivity(intent);
     }
 }

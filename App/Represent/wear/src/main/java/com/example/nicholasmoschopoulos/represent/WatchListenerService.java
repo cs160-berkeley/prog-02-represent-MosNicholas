@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -19,6 +20,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,7 +33,7 @@ public class WatchListenerService extends WearableListenerService {
     public final static String REP_NAMES = "com.represent.REP_NAMES";
     private final static String REP_DATA_PATH = "/rep_data_path";
     private final static String START_ACTIVITY_PATH = "/show_rep_list";
-    private final int TIMEOUT_MS = 30;
+    private final int TIMEOUT_MS = 300;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -66,7 +68,8 @@ public class WatchListenerService extends WearableListenerService {
             Log.d("T", "Google Api loaded");
         }
 
-        for (DataEvent event : dataEvents) {
+        final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
+        for (DataEvent event : events) {
             if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals(REP_DATA_PATH)) {
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
                 String[] repNames = dataMapItem.getDataMap().getStringArray(REP_NAMES);
@@ -87,6 +90,7 @@ public class WatchListenerService extends WearableListenerService {
         }
         ConnectionResult result = mGoogleApiClient.blockingConnect(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         if (!result.isSuccess()) {
+            Log.e("FAIL", "Failed to connect to google");
             return null;
         }
         // convert asset into a file descriptor and block until it's ready

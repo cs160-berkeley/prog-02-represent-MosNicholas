@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,62 +23,103 @@ public class LoadRepresentativeData {
     }
 
     public void loadData(String location) {
-        mockData = fillMockData(); // replace with API calls
+        mockData = takeNRandom(fillMockData(), 3); // replace with API calls
         adapter.updateEntries(mockData);
     }
 
     public static List<HashMap<String, String>> fillMockData() {
         List<HashMap<String, String>> mockData = new ArrayList<>();
-        HashMap<String, String> m1 = new HashMap<>();
-        HashMap<String, String> m2 = new HashMap<>();
-        HashMap<String, String> m3 = new HashMap<>();
+        HashMap<String, String> m = new HashMap<>();
         // first rep
-        m1.put("image", "barbara");
-        m1.put("name", "Barbara Lee");
-        m1.put("party", "democrat");
-        m1.put("email", "barbara@lee.house.gov");
-        m1.put("website", "http://lee.house.gov");
-        m1.put("tweet", "#FBF to @FCC’s decision one year ago today that preserved #netneutrality and kept the Internet open, fair, & free for all.");
-        m1.put("eot", "09/09/2014");
-        m1.put("committees", "privacy,nothing else");
-        m1.put("bills", "1,2,3,4,5,6,7,8");
-        m1.put("state", "CA");
-        m1.put("county", "Albany");
-        m1.put("obama_votes", "88");
-        m1.put("romney_votes", "12");
+        m.put("image", "barbara");
+        m.put("name", "Barbara Lee");
+        m.put("party", "democrat");
+        m.put("email", "barbara@lee.house.gov");
+        m.put("website", "http://lee.house.gov");
+        m.put("tweet", "#FBF to @FCC’s decision one year ago today that preserved #netneutrality and kept the Internet open, fair, & free for all.");
+        m.put("eot", "09/09/2014");
+        m.put("committees", "privacy,nothing else");
+        m.put("bills", "1,2,3,4,5,6,7,8");
+        m.put("state", "CA");
+        m.put("county", "Albany");
+        m.put("obama_votes", "88");
+        m.put("romney_votes", "12");
+        mockData.add(m);
+        m = new HashMap<>();
         // second rep
-        m2.put("image", "eric");
-        m2.put("name", "Eric Swalwell");
-        m2.put("party", "democrat");
-        m2.put("email", "eric@swalwell.house.gov");
-        m2.put("website", "http://swalwell.house.gov");
-        m2.put("tweet", "@Dee1music’s #SallieMaeBack is a song for our times – but it shouldn’t have to be. #FutureForum #debtfreecollege http://www.cnn.com/2016/02/24/living/sallie-mae-back-dee1-video-viral-feat/");
-        m2.put("eot", "02/02/2098");
-        m2.put("committees", "elderly,young,middle aged");
-        m2.put("bills", "1,2,3,4,5,6,7,8");
-        m2.put("state", "CA");
-        m2.put("county", "Albany");
-        m2.put("obama_votes", "88");
-        m2.put("romney_votes", "12");
+        m.put("image", "eric");
+        m.put("name", "Eric Swalwell");
+        m.put("party", "democrat");
+        m.put("email", "eric@swalwell.house.gov");
+        m.put("website", "http://swalwell.house.gov");
+        m.put("tweet", "@Dee1music’s #SallieMaeBack is a song for our times – but it shouldn’t have to be. #FutureForum #debtfreecollege http://www.cnn.com/2016/02/24/living/sallie-mae-back-dee1-video-viral-feat/");
+        m.put("eot", "02/02/2098");
+        m.put("committees", "elderly,young,middle aged");
+        m.put("bills", "1,2,3,4,5,6,7,8");
+        m.put("state", "CA");
+        m.put("county", "Albany");
+        m.put("obama_votes", "88");
+        m.put("romney_votes", "12");
+        mockData.add(m);
+        m = new HashMap<>();
         // third rep
-        m3.put("image", "honda");
-        m3.put("name", "Mike Honda");
-        m3.put("party", "democrat");
-        m3.put("email", "mike@honda.house.gov");
-        m3.put("website", "http://honda.house.gov");
-        m3.put("tweet", "Great news, #CA17: 1st 250 miles of track of CA HS rail will go to San Jose. Now @VTA #BART & @CaHSRA will be in #SV http://www.mercurynews.com/california/ci_29529618/california-bullet-train-headed-first-san-jose-big");
-        m3.put("eot", "01/01/01");
-        m3.put("committees", "CS160,Jacobs Hall");
-        m3.put("bills", "1,2,3,4,5,6,7,8");
-        m3.put("state", "CA");
-        m3.put("county", "Albany");
-        m3.put("obama_votes", "88");
-        m3.put("romney_votes", "12");
+        m.put("image", "honda");
+        m.put("name", "Mike Honda");
+        m.put("party", "democrat");
+        m.put("email", "mike@honda.house.gov");
+        m.put("website", "http://honda.house.gov");
+        m.put("tweet", "Great news, #CA17: 1st 250 miles of track of CA HS rail will go to San Jose. Now @VTA #BART & @CaHSRA will be in #SV http://www.mercurynews.com/california/ci_29529618/california-bullet-train-headed-first-san-jose-big");
+        m.put("eot", "01/01/01");
+        m.put("committees", "CS160,Jacobs Hall");
+        m.put("bills", "1,2,3,4,5,6,7,8");
+        m.put("state", "CA");
+        m.put("county", "Albany");
+        m.put("obama_votes", "88");
+        m.put("romney_votes", "12");
+        mockData.add(m);
+        m = new HashMap<>();
+        // fourth Rep
+        m.put("image", "honda");
+        m.put("name", "Mitch McDonald");
+        m.put("party", "republican");
+        m.put("email", "mitch@mcdonald.house.gov");
+        m.put("website", "http://mcdonald.house.gov");
+        m.put("tweet", "CS160 is awesome");
+        m.put("eot", "01/01/01");
+        m.put("committees", "Berkeley,Campanile,Papers");
+        m.put("bills", "8,7,6,5,6,7,8");
+        m.put("state", "NM");
+        m.put("county", "New Mexico");
+        m.put("obama_votes", "60");
+        m.put("romney_votes", "40");
+        mockData.add(m);
+        m = new HashMap<>();
+        // fifth rep
+        m.put("image", "paulos");
+        m.put("name", "Eric Paulos");
+        m.put("party", "republican");
+        m.put("email", "eric@paulos.house.gov");
+        m.put("website", "http://paulos.house.gov");
+        m.put("tweet", "Congrats to Lioness Vibrator designed to Improve your Sexual Experiences - developed in the CITRIS Invention Lab");
+        m.put("eot", "06/05/2016");
+        m.put("committees", "Design,UC Berkeley,CS160,Teaching");
+        m.put("bills", "Proj1,Proj2A,Proj2B,Proj2C");
+        m.put("state", "CA");
+        m.put("county", "Another county");
+        m.put("obama_votes", "100");
+        m.put("romney_votes", "0");
+        mockData.add(m);
+        m = new HashMap<>();
 
-        mockData.add(m1);
-        mockData.add(m2);
-        mockData.add(m3);
         return mockData;
+    }
+
+    public static List<HashMap<String, String>> getAllData() {
+        return fillMockData();
+    }
+
+    public HashMap<String, String> getNthRepresentative(int n) {
+        return mockData.get(n);
     }
 
     public int[] getRepresentativeImageIds(){
@@ -113,5 +155,14 @@ public class LoadRepresentativeData {
             b.putString(key, h.get(key));
         }
         return b;
+    }
+
+    private static <T> List<T> takeNRandom(List<T> l, int n) {
+        List<T> lr = new ArrayList<>();
+        Collections.shuffle(l);
+        for (int i=0; i<n; i++) {
+            lr.add(l.get(i));
+        }
+        return lr;
     }
 }

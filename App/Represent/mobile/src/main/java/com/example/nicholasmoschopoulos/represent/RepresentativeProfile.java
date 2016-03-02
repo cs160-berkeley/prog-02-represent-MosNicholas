@@ -24,9 +24,8 @@ public class RepresentativeProfile extends Activity {
         setContentView(R.layout.activity_representative_profile);
 
         Intent intent = getIntent();
-        int repID = intent.getIntExtra(RepresentativesList.REPRESENTATIVE_ID, 0);
-
-        HashMap<String, String> repData = getDataForRep(repID);
+        String repName = intent.getStringExtra(RepresentativesList.REPRESENTATIVE_ID);
+        HashMap<String, String> repData = getDataForRep(repName);
 
         ImageView image = (ImageView) findViewById(R.id.representative_image);
         TextView name = (TextView) findViewById(R.id.representative_name);
@@ -46,9 +45,14 @@ public class RepresentativeProfile extends Activity {
         gridView.setAdapter(billAdapter);
     }
 
-    private HashMap<String, String> getDataForRep(int repID) {
-        List<HashMap<String, String>> mockData = LoadRepresentativeData.fillMockData();
-        return mockData.get(repID);
+    private HashMap<String, String> getDataForRep(String repName) {
+        List<HashMap<String, String>> mockData = LoadRepresentativeData.getAllData();
+        for (HashMap<String, String> h : mockData) {
+            if (h.get("name").equals(repName)) {
+                return h;
+            }
+        }
+        return null;
     }
 
     private String[] concatArrays(String[] bills, String[] committees) {

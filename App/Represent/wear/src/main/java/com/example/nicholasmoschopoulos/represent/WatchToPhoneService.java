@@ -21,6 +21,12 @@ import java.util.List;
  */
 public class WatchToPhoneService extends Service implements GoogleApiClient.ConnectionCallbacks {
 
+    private static final String REPRESENTATIVE_PATH = "/representative_chosen";
+    private static final String WATCH_SHAKEN_PATH = "/watch_shaken";
+    public static final String MESSAGE_KEY = "message_key";
+    public static final String REPRESENTATIVE_CHOSEN = "representative";
+    public static final String WATCH_SHAKEN = "shake_that";
+
     private GoogleApiClient mWatchApiClient;
     private List<Node> nodes = new ArrayList<>();
 
@@ -56,17 +62,27 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
                     @Override
                     public void onResult(NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
                         nodes = getConnectedNodesResult.getNodes();
-                        Log.d("T", "found nodes");
-                        //when we find a connected node, we populate the list declared above
-                        //finally, we can send a message
-                        sendMessage("/send_toast", "Good job!");
-                        Log.d("T", "sent");
                     }
                 });
     }
 
     @Override //we need this to implement GoogleApiClient.ConnectionsCallback
     public void onConnectionSuspended(int i) {}
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        final String messageToSend = intent.getStringExtra(MESSAGE_KEY);
+        if (messageToSend.equals(REPRESENTATIVE_CHOSEN)) {
+            final String repName = intent.getStringExtra(RepresentativesGridAdapter.REP_ID);
+            sendMessage(REPRESENTATIVE_PATH, repName);
+        } else if (messageToSend.equals(WATCH_SHAKEN)) {
+            System.out.println("Sending watch shaken message");
+            final String location = intent.getStringExtra(Main2Activity.WATCH_SHAKE);
+            sendMessage(WATCH_SHAKEN_PATH, location);
+        }
+
+        return START_STICKY;
+    }
 
     private void sendMessage(final String path, final String text) {
         for (Node node : nodes) {
