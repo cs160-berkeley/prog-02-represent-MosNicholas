@@ -77,8 +77,7 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
             sendMessage(REPRESENTATIVE_PATH, repName);
         } else if (messageToSend.equals(WATCH_SHAKEN)) {
             System.out.println("Sending watch shaken message");
-            final String location = intent.getStringExtra(Main2Activity.WATCH_SHAKE);
-            sendMessage(WATCH_SHAKEN_PATH, location);
+            sendMessage(WATCH_SHAKEN_PATH, "");
         }
 
         return START_STICKY;

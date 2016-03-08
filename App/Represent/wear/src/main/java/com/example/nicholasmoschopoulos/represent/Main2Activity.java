@@ -19,8 +19,6 @@ public class Main2Activity extends WearableActivity implements SensorEventListen
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 600;
 
-    public static final String WATCH_SHAKE = "com.represent.wear.WATCH_SHAKE";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +56,7 @@ public class Main2Activity extends WearableActivity implements SensorEventListen
                 float speed = Math.abs(x + y + z - last_x - last_y - last_z)/ diffTime * 10000;
 
                 if (speed > SHAKE_THRESHOLD) {
-                    System.out.println("shake threshold reached");
                     Intent intent = new Intent(getBaseContext(), WatchToPhoneService.class);
-                    intent.putExtra(WATCH_SHAKE, getNewLocation());
                     intent.putExtra(WatchToPhoneService.MESSAGE_KEY, WatchToPhoneService.WATCH_SHAKEN);
                     startService(intent);
                 }
@@ -86,10 +82,4 @@ public class Main2Activity extends WearableActivity implements SensorEventListen
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
-
-    private String getNewLocation() {
-        return String.format("%f, %f", Math.random(), Math.random());
-    }
-
-    public void runTest() {}
 }
