@@ -21,11 +21,19 @@ import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.AddressType;
 import com.google.maps.model.GeocodingResult;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "UGMY2WlftKFtE64zLssqwGtMw";
+    private static final String TWITTER_SECRET = "ktu2Zq3T1IztGgEO8AB2I8rXqQ9gEK9napk9Yt9Qda5hRlqwIu";
+
 
     public final static String LOCATION = "com.represent.LOCATION";
     public final static String ZIP_OR_GPS = "com.represent.ZIP_OR_GPS";
@@ -45,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
 
         ImageView img = (ImageView) findViewById(R.id.location_pin);
