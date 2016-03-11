@@ -4,14 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
 
@@ -63,12 +71,15 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
                 relativeLayout.setBackground(new BitmapDrawable(mContext.getResources(), image));
             }
 
+            LinearLayout representativeTitle = (LinearLayout) view.findViewById(R.id.representative_title);
             TextView repName = (TextView) view.findViewById(R.id.rep_name);
-            repName.setText(rd.getName());
+            TextView repParty = (TextView) view.findViewById(R.id.rep_party);
+            repName.setText(rd.getRoleAndName());
+            repParty.setText(rd.getParty().toString());
             if (rd.getParty() == Representative.Party.Democrat) {
-                repName.setBackgroundColor(mContext.getResources().getColor(R.color.democratFaded));
+                representativeTitle.setBackgroundColor(mContext.getResources().getColor(R.color.democratFaded));
             } else {
-                repName.setBackgroundColor(mContext.getResources().getColor(R.color.republicanFaded));
+                representativeTitle.setBackgroundColor(mContext.getResources().getColor(R.color.republicanFaded));
             }
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +95,8 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
             view = inflater.inflate(R.layout.presidential_election_data, null);
             TextView county = (TextView) view.findViewById(R.id.county_pres_data);
             county.setText(String.format("%s, %s", rd.getCounty(), rd.getState()));
-            TextView obama = (TextView) view.findViewById(R.id.obama_votes);
-            obama.setText(String.format("%% of vote for Obama: %.1f", rd.getObamaVotes()));
-            TextView romney = (TextView) view.findViewById(R.id.romney_votes);
-            romney.setText(String.format("%% of vote for Romney: %.1f", rd.getRomneyVotes()));
+            PieChart pieChart = (PieChart) view.findViewById(R.id.vote_chart);
+            createPieChart(pieChart, rd.getObamaVotes(), rd.getRomneyVotes());
         }
 
         viewGroup.addView(view);
@@ -100,5 +109,33 @@ public class RepresentativesGridAdapter extends GridPagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object o) {
         return view.equals(o);
+    }
+
+    private void createPieChart(PieChart pieChart, Double obamaVotes, Double romneyVotes) {
+        pieChart.setUsePercentValues(true);
+        pieChart.setHoleColor(Color.TRANSPARENT);
+        pieChart.setHoleRadius(40f);
+        pieChart.setRotationEnabled(false);
+        pieChart.getLegend().setEnabled(false);
+
+        ArrayList<Entry> yVals = new ArrayList<>();
+        yVals.add(new Entry(obamaVotes.floatValue(), 0));
+        yVals.add(new Entry(romneyVotes.floatValue(), 1));
+        PieDataSet dataSet = new PieDataSet(yVals, "Election Results");
+        dataSet.setSliceSpace(1.5f);
+        dataSet.setColors(new int[]{R.color.democratFaded, R.color.republicanFaded}, mContext);
+
+        ArrayList<String> xVals = new ArrayList<>();
+        xVals.add("Obama");
+        xVals.add("Romney");
+
+        PieData pieData = new PieData(xVals, dataSet);
+        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueTextSize(9f);
+        pieData.setValueTextColor(Color.WHITE);
+
+        pieChart.setData(pieData);
+        pieChart.highlightValues(null);
+        pieChart.invalidate();
     }
 }

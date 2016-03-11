@@ -16,28 +16,20 @@
             android:layout_height="wrap_content"
             android:text="@string/election_data"
             android:gravity="center_horizontal"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp"/>
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:textSize="11dp"
             android:id="@+id/county_pres_data" />
 
-        <TextView
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/vote_chart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="% votes for Obama: 93"
-            android:gravity="center_horizontal"
-            android:id="@+id/obama_votes" />
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="% votes for Romney: 93"
-            android:gravity="center_horizontal"
-            android:id="@+id/romney_votes" />
     </LinearLayout>
 
 </android.support.wearable.view.BoxInsetLayout>

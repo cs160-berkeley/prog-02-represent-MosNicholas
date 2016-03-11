@@ -2,8 +2,6 @@ package com.example.nicholasmoschopoulos.represent;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
