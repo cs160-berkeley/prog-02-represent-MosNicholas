@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/white"
     tools:context="com.example.nicholasmoschopoulos.represent.RepresentativeProfile">
 
     <include layout="@layout/content_representative_profile" />
@@ -15,41 +16,137 @@
 
         <ImageView
             android:id="@+id/representative_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="10dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"/>
 
         <TextView
             android:id="@+id/representative_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/representative_image"
-            android:layout_marginTop="8dp"
+            android:textColor="#222"
+            android:layout_marginTop="220dp"
+            android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            android:textSize="14sp" />
+            android:textSize="35dp" />
 
-        <TextView
-            android:id="@+id/representative_eot"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/representative_name"
-            android:layout_marginTop="3dp"
-            android:layout_centerHorizontal="true"
-            android:textSize="14sp" />
+            android:orientation="horizontal"
+            android:id="@+id/representative_subtitle">
 
-        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/grid_bills_committees"
-            android:numColumns="2"
-            android:gravity="center"
-            android:columnWidth="50dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:stretchMode="columnWidth"
+            <TextView
+                android:id="@+id/representative_party"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#444"
+                android:textAllCaps="true"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#444"
+                android:text=" | "
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/representative_eot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/representative_subtitle"
+            android:background="#D3D3D3"
+            android:id="@+id/line_separator"/>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/representative_eot"/>
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/line_separator"
+            android:id="@+id/representative_bills_controller">
+
+            <TextView
+                android:id="@+id/representative_bills_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textColor="#222"
+                android:textStyle="bold"
+                android:layout_alignParentStart="true"
+                android:text="@string/list_of_bills"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="81dp"
+                android:layout_height="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="3dp"
+                android:layout_below="@+id/representative_bills_button"
+                android:background="#D3D3D3"
+                android:id="@+id/bill_underline"/>
+
+            <TextView
+                android:id="@+id/representative_committees_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:textColor="#222"
+                android:layout_alignParentEnd="true"
+                android:text="@string/list_of_committees"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="130dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/representative_committees_button"
+                android:background="#D3D3D3"
+                android:visibility="gone"
+                android:id="@+id/committee_underline"/>
+
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="13.0sp"
+            android:layout_below="@+id/representative_bills_controller"
+            android:id="@+id/list_bills"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="13.0sp"
+            android:layout_below="@+id/representative_bills_controller"
+            android:id="@+id/list_committees"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

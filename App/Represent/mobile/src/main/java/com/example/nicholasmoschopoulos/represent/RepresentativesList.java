@@ -58,18 +58,18 @@ public class RepresentativesList extends AppCompatActivity {
         representativeData.setCountyState(county, state);
         representativeData.execute(locationMetaData);
 
-        adapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                startWatchActivity();
-            }
-
-            @Override
-            public void onInvalidated() {
-                super.onInvalidated();
-            }
-        });
+//        adapter.registerDataSetObserver(new DataSetObserver() {
+//            @Override
+//            public void onChanged() {
+//                super.onChanged();
+//                startWatchActivity();
+//            }
+//
+//            @Override
+//            public void onInvalidated() {
+//                super.onInvalidated();
+//            }
+//        });
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

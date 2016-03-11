@@ -17,8 +17,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="10dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="13.0sp"
         android:layout_below="@+id/title_bar"
         android:id="@+id/representative_list"/>
 
