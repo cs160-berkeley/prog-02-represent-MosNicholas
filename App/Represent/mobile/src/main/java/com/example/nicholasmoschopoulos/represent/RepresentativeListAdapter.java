@@ -72,7 +72,7 @@ public class RepresentativeListAdapter extends BaseAdapter {
             Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
             repImage.setImageBitmap(getRoundedCornerBitmap(image));
         }
-        repName.setText(repData.getName());
+        repName.setText(repData.getRoleAndName());
         repEmail.setText(repData.getEmail());
         repWebsite.setText(repData.getWebsite());
         if (repData.getTweet() != null && !repData.getTweet().isEmpty()) {
