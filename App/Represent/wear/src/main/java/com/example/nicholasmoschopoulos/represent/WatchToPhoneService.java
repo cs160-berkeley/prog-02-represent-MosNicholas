@@ -7,9 +7,15 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
@@ -73,8 +79,8 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String messageToSend = intent.getStringExtra(MESSAGE_KEY);
         if (messageToSend.equals(REPRESENTATIVE_CHOSEN)) {
-            final String repName = intent.getStringExtra(RepresentativesGridAdapter.REP_ID);
-            sendMessage(REPRESENTATIVE_PATH, repName);
+            final Bundle repData = intent.getBundleExtra(RepresentativesGridAdapter.INTENT_REP_DATA);
+            sendRepresentativeProfile(repData);
         } else if (messageToSend.equals(WATCH_SHAKEN)) {
             System.out.println("Sending watch shaken message");
             sendMessage(WATCH_SHAKEN_PATH, "");
@@ -87,6 +93,22 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
         for (Node node : nodes) {
             Wearable.MessageApi.sendMessage(mWatchApiClient, node.getId(), path, text.getBytes());
         }
+    }
+
+    private void sendRepresentativeProfile(Bundle repData) {
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(REPRESENTATIVE_PATH);
+
+        putDataMapReq.getDataMap().putDataMap(RepresentativesGridAdapter.INTENT_REP_DATA, DataMap.fromBundle(repData));
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mWatchApiClient, putDataReq);
+        pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+            @Override
+            public void onResult(DataApi.DataItemResult dataItemResult) {
+                Status result = dataItemResult.getStatus();
+                Log.d("sendRepProfile result", result.toString());
+            }
+        });
     }
 
 }

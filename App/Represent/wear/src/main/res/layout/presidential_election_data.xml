@@ -22,14 +22,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="State: California"
-            android:gravity="center_horizontal"
-            android:id="@+id/state_pres_data" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="County: Albany"
             android:gravity="center_horizontal"
             android:id="@+id/county_pres_data" />
 

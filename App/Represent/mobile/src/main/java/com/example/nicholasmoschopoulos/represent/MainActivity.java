@@ -18,43 +18,53 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
-import com.google.maps.model.AddressType;
 import com.google.maps.model.GeocodingResult;
 
 import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-import io.fabric.sdk.android.Fabric;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "UGMY2WlftKFtE64zLssqwGtMw";
-    private static final String TWITTER_SECRET = "ktu2Zq3T1IztGgEO8AB2I8rXqQ9gEK9napk9Yt9Qda5hRlqwIu";
-
-
     public final static String LOCATION = "com.represent.LOCATION";
     public final static String ZIP_OR_GPS = "com.represent.ZIP_OR_GPS";
+    public final static String COUNTY = "com.represent.COUNTY_NAME";
+    public final static String STATE = "com.represent.STATE_NAME";
+    public final static String COUNTRY = "com.represent.COUNTRY_NAME";
     public final static String ZIP = "com.represent.ZIP";
     public final static String GPS = "com.represent.GPS";
     private final static int GPS_SELECTED = 0;
     private final static int ZIP_SELECTED = 1;
 
     private final static String BAD_ZIP_TEXT = "Bad zip code";
-    private final static String NO_LOCATION_TEXT = "No location found";
+    private final static String NO_LOCATION_TEXT = "Location not found";
+
+    private static final String TWITTER_KEY = "UGMY2WlftKFtE64zLssqwGtMw";
+    private static final String TWITTER_SECRET = "ktu2Zq3T1IztGgEO8AB2I8rXqQ9gEK9napk9Yt9Qda5hRlqwIu";
 
     private GoogleApiClient mGoogleApiClient;
     private GeoApiContext geoContext;
+    private TwitterSession twitterSession;
+    private TwitterAuthClient authClient;
     private Location mLastLocation;
     private String locationToSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
+
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ImageView img = (ImageView) findViewById(R.id.location_pin);
@@ -83,6 +93,23 @@ public class MainActivity extends AppCompatActivity implements
         if (geoContext == null) {
             geoContext = new GeoApiContext().setApiKey(getString(R.string.google_maps_key));
         }
+
+        authClient = new TwitterAuthClient();
+        authClient.authorize(this, new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                twitterSession = result.data;
+            }
+
+            @Override
+            public void failure(TwitterException e) {}
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        authClient.onActivityResult(requestCode, resultCode, data);
     }
 
     public void sendMessage(int zipOrGPS) {
@@ -100,22 +127,21 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         Map<String, String> locationMeta = getLocationMetaData(locationToSearch);
-        if (locationMeta == null || !isValidLocation(locationMeta.get("country"))) {
+        if (locationMeta == null || !isValidLocation(locationMeta.get(COUNTRY))) {
             if (zipOrGPS == ZIP_SELECTED) {
                 showBadZipToast();
             } else { showFailedLocationToast(); }
             return;
         }
 
-        if (zipOrGPS == GPS_SELECTED) {
-            locationToSearch = String.format("%s, %s", locationMeta.get("county"), locationMeta.get("state"));
-        }
+        intent.putExtra(COUNTY, locationMeta.get(COUNTY));
+        intent.putExtra(STATE, locationMeta.get(STATE));
         intent.putExtra(LOCATION, locationToSearch);
         startActivity(intent);
     }
 
     private Map<String, String> getLocationMetaData(String location) {
-        if (location.isEmpty() || location.length() < 5) { return null; }
+        if (location == null || location.isEmpty() || location.length() < 5) { return null; }
         Map<String, String> geoMeta = new HashMap<>();
         try {
             GeocodingResult[] results = GeocodingApi.geocode(geoContext, location).await();
@@ -126,13 +152,13 @@ public class MainActivity extends AppCompatActivity implements
                         String aType = act.toString().toLowerCase();
                         switch (aType) {
                             case "administrative_area_level_1" :
-                                geoMeta.put("state", a.shortName);
+                                geoMeta.put(STATE, a.shortName);
                                 break;
                             case "administrative_area_level_2" :
-                                geoMeta.put("county", a.shortName);
+                                geoMeta.put(COUNTY, a.shortName);
                                 break;
                             case "country" :
-                                geoMeta.put("country", a.shortName);
+                                geoMeta.put(COUNTRY, a.shortName);
                                 break;
                         }
                     }

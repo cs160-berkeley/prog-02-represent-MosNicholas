@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.GridViewPager;
 
+import java.util.ArrayList;
+
 public class Main2Activity extends WearableActivity implements SensorEventListener {
 
     // Sensor code
@@ -30,10 +32,9 @@ public class Main2Activity extends WearableActivity implements SensorEventListen
 
         Intent intent = getIntent();
         RepresentativesGridAdapter adapter = new RepresentativesGridAdapter(this);
-        adapter.loadData(
-                intent.getStringArrayExtra(WatchListenerService.REP_NAMES),
-                intent.getBundleExtra(WatchListenerService.REP_DATA)
-        );
+        ArrayList<String> repIDs = intent.getStringArrayListExtra(WatchListenerService.REP_IDS);
+        Bundle repData = intent.getBundleExtra(WatchListenerService.REP_DATA);
+        adapter.loadData(repIDs, repData);
 
         GridViewPager pager = (GridViewPager) findViewById(R.id.representative_watch_list);
         pager.setAdapter(adapter);

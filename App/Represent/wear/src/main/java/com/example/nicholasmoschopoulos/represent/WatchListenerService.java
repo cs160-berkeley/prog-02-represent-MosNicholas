@@ -1,27 +1,19 @@
 package com.example.nicholasmoschopoulos.represent;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.data.FreezableUtils;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by joleary and noon and nicholasmoschopoulos
@@ -30,12 +22,9 @@ import java.util.concurrent.TimeUnit;
 public class WatchListenerService extends WearableListenerService {
 
     public final static String REP_DATA = "com.represent.REP_DATA";
-    public final static String REP_NAMES = "com.represent.REP_NAMES";
+    public final static String REP_IDS = "com.represent.REP_IDS";
     private final static String REP_DATA_PATH = "/rep_data_path";
     private final static String START_ACTIVITY_PATH = "/show_rep_list";
-    private final int TIMEOUT_MS = 300;
-
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
@@ -53,77 +42,21 @@ public class WatchListenerService extends WearableListenerService {
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         Log.d("T", "dataChanged called");
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Wearable.API)
-                    .build();
-
-            ConnectionResult connectionResult = mGoogleApiClient.blockingConnect(TIMEOUT_MS, TimeUnit.SECONDS);
-
-            if (!connectionResult.isSuccess()) {
-                Log.e("FAIL", "Failed to connect to GoogleApiClient.");
-                return;
-            }
-
-            Log.d("T", "Google Api loaded");
-        }
-
         final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
         for (DataEvent event : events) {
             if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals(REP_DATA_PATH)) {
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-                String[] repNames = dataMapItem.getDataMap().getStringArray(REP_NAMES);
+                ArrayList<String> repIDs = dataMapItem.getDataMap().getStringArrayList(REP_IDS);
                 DataMap repData = dataMapItem.getDataMap().getDataMap(REP_DATA);
+
+                if (repIDs == null) { return; }
 
                 Intent intent = new Intent(this, Main2Activity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(REP_NAMES, repNames);
-                intent.putExtra(REP_DATA, getBundleFromDataMap(repNames, repData));
+                intent.putExtra(REP_IDS, repIDs);
+                intent.putExtra(REP_DATA, repData.toBundle());
                 startActivity(intent);
             }
         }
-    }
-
-    public Bitmap loadBitmapFromAsset(Asset asset) {
-        if (asset == null) {
-            throw new IllegalArgumentException("Asset must be non-null");
-        }
-        ConnectionResult result = mGoogleApiClient.blockingConnect(TIMEOUT_MS, TimeUnit.MILLISECONDS);
-        if (!result.isSuccess()) {
-            Log.e("FAIL", "Failed to connect to google");
-            return null;
-        }
-        // convert asset into a file descriptor and block until it's ready
-        InputStream assetInputStream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset).await().getInputStream();
-        mGoogleApiClient.disconnect();
-
-        if (assetInputStream == null) {
-            Log.w("FAIL", "Requested an unknown Asset.");
-            return null;
-        }
-        // decode the stream into a bitmap
-        return BitmapFactory.decodeStream(assetInputStream);
-    }
-
-    private Bundle getBundleFromDataMap(String[] keys, DataMap data) {
-        Bundle b = new Bundle();
-        for (String k : keys) {
-            Bundle b1 = new Bundle();
-            DataMap d = data.getDataMap(k);
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            Bitmap image = loadBitmapFromAsset(d.getAsset("image"));
-            image.compress(Bitmap.CompressFormat.JPEG, 90, byteStream);
-
-            b1.putString("name", d.getString("name"));
-            b1.putString("party", d.getString("party"));
-            b1.putString("state", d.getString("state"));
-            b1.putString("county", d.getString("county"));
-            b1.putString("obama_votes", d.getString("obama_votes"));
-            b1.putString("romney_votes", d.getString("romney_votes"));
-            b1.putByteArray("image", byteStream.toByteArray());
-            b.putBundle(k, b1);
-        }
-
-        return b;
     }
 }

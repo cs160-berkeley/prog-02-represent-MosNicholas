@@ -19,7 +19,6 @@
             android:id="@+id/representative_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Barbara Lee"
             android:layout_marginTop="8dp"
             android:textSize="14sp" />
 
@@ -29,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/representative_name"
             android:layout_marginTop="3dp"
-            android:text="barbara@lee.house.gov"
             android:textSize="14sp" />
 
         <TextView
@@ -38,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/representative_email"
             android:layout_marginTop="3dp"
-            android:text="lee.house.gov"
             android:textSize="14sp" />
 
         <TextView
@@ -48,7 +45,6 @@
             android:layout_below="@+id/representative_website"
             android:layout_marginTop="3dp"
             android:maxLines="2"
-            android:text="Blah Blah @#@"
             android:textSize="14sp" />
     </RelativeLayout>
 

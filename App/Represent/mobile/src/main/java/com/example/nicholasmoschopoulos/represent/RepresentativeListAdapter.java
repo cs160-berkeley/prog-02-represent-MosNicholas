@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class RepresentativeListAdapter extends BaseAdapter {
 
     private LayoutInflater mLayoutInflater;
 
-    private List<HashMap<String, String>> entries = new ArrayList<>();
+    private List<Representative> entries = new ArrayList<>();
 
     public RepresentativeListAdapter(Context context) {
         mContext = context;
@@ -42,7 +41,7 @@ public class RepresentativeListAdapter extends BaseAdapter {
     }
 
     @Override
-    public HashMap<String, String> getItem(int position) {
+    public Representative getItem(int position) {
         return entries.get(position);
     }
 
@@ -66,23 +65,27 @@ public class RepresentativeListAdapter extends BaseAdapter {
         TextView repWebsite = (TextView) itemView.findViewById(R.id.representative_website);
         TextView repTweet = (TextView) itemView.findViewById(R.id.representative_tweet);
 
-        HashMap<String, String> repData = getItem(position);
+        Representative repData = getItem(position);
 
-        int imageID = mContext.getResources().getIdentifier(repData.get("image"), "drawable", mContext.getPackageName());
-        Bitmap image = BitmapFactory.decodeResource(mContext.getResources(), imageID);
-        repImage.setImageBitmap(getRoundedCornerBitmap(image));
-        repName.setText(repData.get("name"));
-        repEmail.setText(repData.get("email"));
-        repWebsite.setText(repData.get("website"));
-        repTweet.setText(repData.get("tweet"));
+        byte[] byteImage = repData.getImage();
+        if (byteImage != null && byteImage.length > 0) {
+            Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+            repImage.setImageBitmap(getRoundedCornerBitmap(image));
+        }
+        repName.setText(repData.getName());
+        repEmail.setText(repData.getEmail());
+        repWebsite.setText(repData.getWebsite());
+        if (repData.getTweet() != null && !repData.getTweet().isEmpty()) {
+            repTweet.setText(repData.getTweet());
+        }
 
-        int color = mContext.getResources().getIdentifier(repData.get("party"), "color", mContext.getPackageName());
+        int color = mContext.getResources().getIdentifier(repData.getParty().toString(), "color", mContext.getPackageName());
         itemView.setBackgroundResource(color);
 
         return itemView;
     }
 
-    public void updateEntries(List<HashMap<String, String>> entries) {
+    public void updateEntries(List<Representative> entries) {
         this.entries = entries;
         notifyDataSetChanged();
     }

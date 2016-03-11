@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class RepresentativeProfile extends Activity {
@@ -24,57 +25,49 @@ public class RepresentativeProfile extends Activity {
         setContentView(R.layout.activity_representative_profile);
 
         Intent intent = getIntent();
-        String repName = intent.getStringExtra(RepresentativesList.REPRESENTATIVE_ID);
-        HashMap<String, String> repData = getDataForRep(repName);
+        Bundle representativeData = intent.getBundleExtra(RepresentativesList.INTENT_REP_DATA);
+        Representative repData = Representative.fromBundle(representativeData);
 
-        ImageView image = (ImageView) findViewById(R.id.representative_image);
+        ImageView imageView = (ImageView) findViewById(R.id.representative_image);
         TextView name = (TextView) findViewById(R.id.representative_name);
         TextView eot = (TextView) findViewById(R.id.representative_eot);
 
-        int imageID = getResources().getIdentifier(repData.get("image") , "drawable", this.getPackageName());
-        Bitmap bitmapImage = BitmapFactory.decodeResource(getResources(), imageID);
-        image.setImageBitmap(RepresentativeListAdapter.getRoundedCornerBitmap(bitmapImage));
-        name.setText(repData.get("name"));
-        eot.setText(repData.get("eot"));
+        byte[] byteImage = repData.getImage();
+        if (byteImage != null && byteImage.length > 0) {
+            Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+            imageView.setImageBitmap(RepresentativeListAdapter.getRoundedCornerBitmap(image));
+        }
+        name.setText(repData.getName());
+        eot.setText(repData.getEndOfTerm());
 
         GridView gridView = (GridView) findViewById(R.id.grid_bills_committees);
-        String[] billArray = repData.get("bills").split(",");
-        String[] committeeArray = repData.get("committees").split(",");
-        String[] combinedArrays = concatArrays(billArray, committeeArray);
-        ArrayAdapter<String> billAdapter = new ArrayAdapter<>(this, R.layout.representative_bill_item, combinedArrays);
+        List<String> billsAndCommittees = concatLists(repData.getBills(), repData.getCommittees());
+        ArrayAdapter<String> billAdapter = new ArrayAdapter<>(this, R.layout.representative_bill_item, billsAndCommittees);
         gridView.setAdapter(billAdapter);
     }
 
-    private HashMap<String, String> getDataForRep(String repName) {
-        List<HashMap<String, String>> mockData = LoadRepresentativeData.getAllData();
-        for (HashMap<String, String> h : mockData) {
-            if (h.get("name").equals(repName)) {
-                return h;
-            }
-        }
-        return null;
+    private Representative getDataForRep(String repID) {
+        LoadRepresentativeData a = new LoadRepresentativeData(null, null); // this will fail.
+        return a.getRepresentativeByID(repID);
     }
 
-    private String[] concatArrays(String[] bills, String[] committees) {
-        int maxOfTwo = Math.max(bills.length, committees.length);
-        String[] combined = new String[maxOfTwo * 2 + 2];
-        int b = 0, c = 0, index = 0;
-        combined[index++] = "List of bills";
-        combined[index++] = "List of committees";
-        for (int i=0; i < maxOfTwo; i++) {
-            if (b < bills.length) {
-                combined[index++] = bills[b];
-                b++;
-            } else {
-                combined[index++] = "";
-            }
-
-            if (c < committees.length) {
-                combined[index++] = committees[c];
-                c++;
-            } else {
-                combined[index++] = "";
-            }
+    private List<String> concatLists(ArrayList<String> bills, ArrayList<String> committees) {
+        List<String> combined = new ArrayList<>();
+        combined.add("List of bills");
+        combined.add("List of committees");
+        Iterator<String> billIterator = bills.iterator();
+        Iterator<String> committeeIterator = committees.iterator();
+        while (billIterator.hasNext() && committeeIterator.hasNext()) {
+            combined.add(billIterator.next());
+            combined.add(committeeIterator.next());
+        }
+        while (billIterator.hasNext()) {
+            combined.add(billIterator.next());
+            combined.add("");
+        }
+        while (committeeIterator.hasNext()) {
+            combined.add("");
+            combined.add(committeeIterator.next());
         }
 
         return combined;
