@@ -3,20 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
+    android:layout_centerHorizontal="true"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
     card_view:paddingStart="15dp"
     card_view:paddingEnd="15dp"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="8dp">
+
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/card_holder">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:id="@+id/image_name_holder"
@@ -46,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="2dp"
+                android:layout_marginBottom="1dp"
                 android:textColor="#444"
                 android:layout_below="@+id/representative_name"
                 android:textAllCaps="true"
@@ -56,32 +57,73 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:layout_below="@+id/image_name_holder">
 
-            <TextView
-                android:id="@+id/representative_email"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="14sp" />
+                android:id="@+id/representative_email_holder"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/email"
+                    android:layout_marginRight="2dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/representative_email"
+                    android:textColor="#444"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/representative_website"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/representative_email"
-                android:layout_marginTop="3dp"
-                android:textSize="14sp" />
+                android:id="@+id/representative_website_holder"
+                android:layout_below="@+id/representative_email_holder"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/website"
+                    android:layout_marginRight="2dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#444"
+                    android:orientation="horizontal"
+                    android:id="@+id/representative_website"
+                    android:layout_marginTop="3dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/representative_tweet"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/representative_website"
-                android:layout_marginTop="3dp"
-                android:maxLines="2"
-                android:textSize="14sp" />
+                android:id="@+id/representative_tweet_holder"
+                android:layout_below="@+id/representative_website_holder">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/twitter_logo"
+                    android:src="@drawable/twitter"
+                    android:layout_marginRight="2dp"/>
+                <TextView
+                    android:id="@+id/representative_tweet"
+                    android:layout_toRightOf="@+id/twitter_logo"
+                    android:layout_width="wrap_content"
+                    android:textColor="#444"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:maxLines="2"
+                    android:textSize="12sp" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
