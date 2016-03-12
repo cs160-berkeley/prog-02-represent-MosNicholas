@@ -9,12 +9,14 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -52,15 +54,19 @@ public class RepresentativeListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LinearLayout itemView;
+        CardView itemView;
+
         if (convertView == null) {
-            itemView = (LinearLayout) mLayoutInflater.inflate(R.layout.representative_list_item, parent, false);
+            itemView = (CardView) mLayoutInflater.inflate(R.layout.representative_list_item, parent, false);
         } else {
-            itemView = (LinearLayout) convertView;
+            itemView = (CardView) convertView;
         }
 
+        RelativeLayout imageNameHolder = (RelativeLayout) itemView.findViewById(R.id.image_name_holder);
         ImageView repImage = (ImageView) itemView.findViewById(R.id.listImage);
         TextView repName = (TextView) itemView.findViewById(R.id.representative_name);
+        TextView repParty = (TextView) itemView.findViewById(R.id.representative_party);
+
         TextView repEmail = (TextView) itemView.findViewById(R.id.representative_email);
         TextView repWebsite = (TextView) itemView.findViewById(R.id.representative_website);
         TextView repTweet = (TextView) itemView.findViewById(R.id.representative_tweet);
@@ -73,14 +79,18 @@ public class RepresentativeListAdapter extends BaseAdapter {
             repImage.setImageBitmap(getRoundedCornerBitmap(image));
         }
         repName.setText(repData.getRoleAndName());
+        repParty.setText(repData.getParty().toString());
+
+        if (repData.getParty() == Representative.Party.Democrat) {
+            imageNameHolder.setBackgroundColor(itemView.getResources().getColor(R.color.democrat));
+        } else {
+            imageNameHolder.setBackgroundColor(itemView.getResources().getColor(R.color.republican));
+        }
         repEmail.setText(repData.getEmail());
         repWebsite.setText(repData.getWebsite());
         if (repData.getTweet() != null && !repData.getTweet().isEmpty()) {
             repTweet.setText(repData.getTweet());
         }
-
-        int color = mContext.getResources().getIdentifier(repData.getParty().toString(), "color", mContext.getPackageName());
-        itemView.setBackgroundResource(color);
 
         return itemView;
     }

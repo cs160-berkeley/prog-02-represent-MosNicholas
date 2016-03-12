@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#222"
-            android:layout_marginTop="220dp"
+            android:layout_below="@+id/representative_image"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:textSize="35dp" />
@@ -84,17 +84,17 @@
                 android:id="@+id/representative_bills_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
+                android:paddingLeft="35dp"
                 android:textColor="#222"
                 android:textStyle="bold"
                 android:layout_alignParentStart="true"
                 android:text="@string/list_of_bills"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <View
-                android:layout_width="81dp"
+                android:layout_width="92dp"
                 android:layout_height="3dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="30dp"
                 android:layout_marginTop="3dp"
                 android:layout_below="@+id/representative_bills_button"
                 android:background="#D3D3D3"
@@ -104,21 +104,21 @@
                 android:id="@+id/representative_committees_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="20dp"
+                android:paddingRight="35dp"
                 android:textColor="#222"
                 android:layout_alignParentEnd="true"
                 android:text="@string/list_of_committees"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <View
-                android:layout_width="130dp"
+                android:layout_width="143dp"
                 android:layout_height="3dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/representative_committees_button"
                 android:background="#D3D3D3"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:id="@+id/committee_underline"/>
 
         </RelativeLayout>
@@ -126,7 +126,6 @@
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"

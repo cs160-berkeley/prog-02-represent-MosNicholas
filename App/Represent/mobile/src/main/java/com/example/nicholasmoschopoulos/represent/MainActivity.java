@@ -1,14 +1,22 @@
 package com.example.nicholasmoschopoulos.represent;
 
 import android.content.Intent;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,6 +35,8 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements
     private Location mLastLocation;
     private String locationToSearch;
 
+    private EditText zip1;
+    private EditText zip2;
+    private EditText zip3;
+    private EditText zip4;
+    private EditText zip5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
@@ -67,18 +83,44 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView img = (ImageView) findViewById(R.id.location_pin);
-        img.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout buttonViewHolder = (RelativeLayout) findViewById(R.id.button_holder);
+        final TextView appTitle = (TextView) findViewById(R.id.represent_title_main);
+        final RelativeLayout zipEnter = (RelativeLayout) findViewById(R.id.input_zip);
+
+        zip1 = (EditText) findViewById(R.id.input_zip_1);
+        zip2 = (EditText) findViewById(R.id.input_zip_2);
+        zip3 = (EditText) findViewById(R.id.input_zip_3);
+        zip4 = (EditText) findViewById(R.id.input_zip_4);
+        zip5 = (EditText) findViewById(R.id.input_zip_5);
+        setZipTextWatchers();
+
+        TextView cancel = (TextView) findViewById(R.id.return_to_homescreen);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonViewHolder.setVisibility(View.VISIBLE);
+                appTitle.setVisibility(View.VISIBLE);
+                zipEnter.setVisibility(View.GONE);
+                emptyZipCodeEditTexts();
+            }
+        });
+
+        ImageButton currLocationButton = (ImageButton) findViewById(R.id.current_location_button);
+        currLocationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 sendMessage(GPS_SELECTED);
             }
         });
 
-        Button button = (Button) findViewById(R.id.zip_code_go);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageButton zipButton = (ImageButton) findViewById(R.id.zip_code_button);
+        zipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(ZIP_SELECTED);
+                buttonViewHolder.setVisibility(View.GONE);
+                appTitle.setVisibility(View.GONE);
+                zipEnter.setVisibility(View.VISIBLE);
+                zip1.setFocusableInTouchMode(true);
+                zip1.requestFocus();
             }
         });
 
@@ -116,8 +158,7 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, RepresentativesList.class);
 
         if (zipOrGPS == ZIP_SELECTED) { // Do we need an error state, where invalid ZIP code selected?
-            EditText editText = (EditText) findViewById(R.id.input_zip);
-            locationToSearch = editText.getText().toString();
+            locationToSearch = getZipCode();
             intent.putExtra(ZIP_OR_GPS, ZIP);
         } else {
             if (mLastLocation != null) {
@@ -209,12 +250,134 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
-    }
+    public void onConnectionSuspended(int i) {}
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
 
+    private void emptyZipCodeEditTexts() {
+        zip1.getText().clear();
+        zip2.getText().clear();
+        zip3.getText().clear();
+        zip4.getText().clear();
+        zip5.getText().clear();
+    }
+
+    private void setZipTextWatchers() {
+        zip1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    changeEditTextBarColor(zip1, true);
+                } else {
+                    changeEditTextBarColor(zip1, false);
+                    zip2.setFocusableInTouchMode(true);
+                    zip2.requestFocus();
+                }
+            }
+        });
+
+        zip2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    changeEditTextBarColor(zip2, true);
+                } else {
+                    changeEditTextBarColor(zip2, false);
+                    zip3.setFocusableInTouchMode(true);
+                    zip3.requestFocus();
+                }
+            }
+        });
+
+        zip3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    changeEditTextBarColor(zip3, true);
+                } else {
+                    changeEditTextBarColor(zip3, false);
+                    zip4.setFocusableInTouchMode(true);
+                    zip4.requestFocus();
+                }
+            }
+        });
+
+        zip4.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    changeEditTextBarColor(zip4, true);
+                } else {
+                    changeEditTextBarColor(zip4, false);
+                    zip5.setFocusableInTouchMode(true);
+                    zip5.requestFocus();
+                }
+            }
+        });
+
+        zip5.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    changeEditTextBarColor(zip5, true);
+                } else {
+                    changeEditTextBarColor(zip5, false);
+                    sendMessage(ZIP_SELECTED);
+                }
+            }
+        });
+    }
+
+    private void changeEditTextBarColor(EditText editText, boolean restore) {
+        if (restore) {
+            editText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.edit_bar), PorterDuff.Mode.SRC_ATOP);
+        } else {
+            editText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.button_red), PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    private String getZipCode() {
+        return zip1.getText().toString() + zip2.getText().toString() + zip3.getText().toString() + zip4.getText().toString() + zip5.getText().toString();
     }
 }

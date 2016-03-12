@@ -6,20 +6,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 public class RepresentativeProfile extends Activity {
+
+    private int partyColor;
+    private int baseColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +26,21 @@ public class RepresentativeProfile extends Activity {
         Bundle representativeData = intent.getBundleExtra(RepresentativesList.INTENT_REP_DATA);
         Representative repData = Representative.fromBundle(representativeData);
 
+        baseColor = getResources().getColor(R.color.light_black);
+        if (repData.getParty() == Representative.Party.Democrat) {
+            partyColor = getResources().getColor(R.color.democrat);
+        } else {
+            partyColor = getResources().getColor(R.color.republican);
+        }
+
         ImageView imageView = (ImageView) findViewById(R.id.representative_image);
         TextView name = (TextView) findViewById(R.id.representative_name);
         TextView party = (TextView) findViewById(R.id.representative_party);
         TextView eot = (TextView) findViewById(R.id.representative_eot);
         final TextView listOfBills = (TextView) findViewById(R.id.representative_bills_button);
-        final View billsSubtitle = (View) findViewById(R.id.bill_underline);
+        final View billsSubtitle = findViewById(R.id.bill_underline);
         final TextView listOfCommittees = (TextView) findViewById(R.id.representative_committees_button);
-        final View committeesSubtitle = (View) findViewById(R.id.committee_underline);
+        final View committeesSubtitle = findViewById(R.id.committee_underline);
         final ListView listBills = (ListView) findViewById(R.id.list_bills);
         final ListView listCommittees = (ListView) findViewById(R.id.list_committees);
 
@@ -56,6 +59,9 @@ public class RepresentativeProfile extends Activity {
         ArrayAdapter<String> committeeAdapter = new ArrayAdapter<>(this, R.layout.representative_bill_item, repData.getCommittees());
         listCommittees.setAdapter(committeeAdapter);
 
+        listOfBills.setTextColor(partyColor);
+        billsSubtitle.setBackgroundColor(partyColor);
+
         listOfBills.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +71,9 @@ public class RepresentativeProfile extends Activity {
                 billsSubtitle.setVisibility(View.VISIBLE);
                 listBills.setVisibility(View.VISIBLE);
                 listCommittees.setVisibility(View.GONE);
+                listOfBills.setTextColor(partyColor);
+                listOfCommittees.setTextColor(baseColor);
+                billsSubtitle.setBackgroundColor(partyColor);
             }
         });
 
@@ -77,6 +86,9 @@ public class RepresentativeProfile extends Activity {
                 committeesSubtitle.setVisibility(View.VISIBLE);
                 listCommittees.setVisibility(View.VISIBLE);
                 listBills.setVisibility(View.GONE);
+                listOfCommittees.setTextColor(partyColor);
+                listOfBills.setTextColor(baseColor);
+                committeesSubtitle.setBackgroundColor(partyColor);
             }
         });
     }
